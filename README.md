@@ -16,7 +16,10 @@
   <a href="https://theworker02.github.io/ruby_llm_mesh/"><img src="https://img.shields.io/badge/docs-GitHub%20Pages-1A1A1A" alt="GitHub Pages" /></a>
 </p>
 
-**Official RubyGems page:** [https://rubygems.org/gems/ruby_llm_mesh](https://rubygems.org/gems/ruby_llm_mesh)
+<p align="center">
+  <strong>Install from RubyGems:</strong>
+  <a href="https://rubygems.org/gems/ruby_llm_mesh">https://rubygems.org/gems/ruby_llm_mesh</a>
+</p>
 
 ## What it does
 
@@ -35,6 +38,8 @@ gem "ruby_llm_mesh"
 ```
 
 Then `bundle install`.
+
+Gem page: [rubygems.org/gems/ruby_llm_mesh](https://rubygems.org/gems/ruby_llm_mesh)
 
 ## Quickstart
 
@@ -171,6 +176,10 @@ Configure a **pending trusted publisher** (first release) or trusted publisher a
 | Environment name | `release` |
 
 Also create a GitHub Environment named `release` on the repository (Settings → Environments). Pushing tag `v0.1.0` (or later) runs the workflow with `id-token: write` and publishes via `rubygems/release-gem`.
+
+## Built with
+
+Designed with [Cursor](https://cursor.com) models Opus and Fable 5.
 
 ## License
 

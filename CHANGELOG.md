@@ -16,5 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - RAG helpers: text chunker, bag-of-words embeddings, tool schema adapters
 - Optional ActiveRecord `acts_as_ai_agent` for memory, semantic cache, and audit logging
 - Rails railtie that loads only when Rails is present
+- Documentation site on GitHub Pages
+- Trusted publishing workflow (`.github/workflows/push_gem.yml`) for RubyGems OIDC releases
 
 [0.1.0]: https://github.com/theworker02/ruby_llm_mesh/releases/tag/v0.1.0
