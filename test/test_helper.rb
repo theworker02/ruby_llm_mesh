@@ -26,6 +26,10 @@ class Minitest::Test
   def setup
     RubyLlmMesh.reset_configuration!
     RubyLlmMesh::Router.reset_circuit_breaker!
+    RubyLlmMesh::Cache::SemanticCache.reset!
+    RubyLlmMesh::Mesh::PeerRegistry.reset!
+    RubyLlmMesh::Mesh::HealthMonitor.reset!
+    RubyLlmMesh::NativeCore.reset!
     WebMock.reset!
   end
 end

@@ -20,3 +20,5 @@ Gemfile.lock
 .ruby-version
 .ruby-gemset
 /rdoc/
+ext/chimera_core/target/
+**/Cargo.lock

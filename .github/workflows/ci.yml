@@ -21,3 +21,21 @@ jobs:
           bundler-cache: true
       - name: Run tests
         run: bundle exec rake test
+
+  native:
+    name: Compile chimera_core (optional)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Cargo test & release build
+        working-directory: ext/chimera_core
+        run: |
+          cargo test
+          cargo build --release
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+      - name: Ruby tests with native lib present
+        run: bundle exec rake test

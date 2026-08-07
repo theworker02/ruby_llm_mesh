@@ -1,0 +1,54 @@
+name: Release
+
+# Trusted publishing to RubyGems + GitHub Release on version tags.
+# Configure pending trusted publisher at rubygems.org with:
+#   Gem name:            ruby_llm_mesh
+#   GitHub owner:        theworker02
+#   GitHub repository:   ruby_llm_mesh
+#   Workflow filename:   release.yml
+#   Environment name:    release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    name: Build, publish gem, create GitHub release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    environment: release
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Build chimera_core
+        working-directory: ext/chimera_core
+        run: cargo build --release
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+          ruby-version: ruby
+
+      - name: Build gem
+        run: gem build ruby_llm_mesh.gemspec
+
+      - name: Publish to RubyGems (trusted publishing)
+        uses: rubygems/release-gem@v1
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: "*.gem"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

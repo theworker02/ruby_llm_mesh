@@ -31,8 +31,8 @@
       <img class="hero-logo" src="assets/logo.png" alt="ruby_llm_mesh logo" width="120" height="120" />
       <h1>ruby_llm_mesh</h1>
       <p class="lede">
-        Route prompts across OpenAI, Anthropic, and local nodes with one DSL —
-        circuit breaking, fallback ladders, and RAG helpers for Ruby &amp; Rails.
+        Sovereign mesh routing for Ruby — native FFI core, OpenAI, Anthropic, and local nodes
+        with circuit breaking, strategy-based <code>execute</code>, and cloud failover.
       </p>
       <div class="cta-row">
         <a class="btn primary" href="https://rubygems.org/gems/ruby_llm_mesh">Install from RubyGems</a>
@@ -45,6 +45,14 @@
       <h2>Features</h2>
       <div class="feature-grid">
         <article>
+          <h3>Native mesh core</h3>
+          <p>Optional Rust <code>chimera_core</code> via FFI, with a pure-Ruby fallback when uncompiled.</p>
+        </article>
+        <article>
+          <h3>Strategy execute</h3>
+          <p><code>AiAgentRouter.execute</code> supports <code>:auto</code>, <code>:p2p_mesh</code>, and real cloud providers.</p>
+        </article>
+        <article>
           <h3>Unified DSL</h3>
           <p><code>AiAgentRouter.complete</code> talks to multiple providers with a single call shape.</p>
         </article>
@@ -53,16 +61,8 @@
           <p>Per-provider failure tracking opens circuits and skips unhealthy backends.</p>
         </article>
         <article>
-          <h3>Fallback ladders</h3>
-          <p>Automatically continue down the provider list when one call fails.</p>
-        </article>
-        <article>
           <h3>RAG helpers</h3>
           <p>Chunking, local embeddings, and tool schema adapters for OpenAI and Anthropic.</p>
-        </article>
-        <article>
-          <h3>Rails ready</h3>
-          <p>Optional <code>acts_as_ai_agent</code> for memory, cache, and audit trails.</p>
         </article>
         <article>
           <h3>Local nodes</h3>
@@ -81,10 +81,9 @@ AiAgentRouter.configure do |c|
   c.default_providers = %i[anthropic openai local_node]
 end
 
-response = AiAgentRouter.complete(
-  prompt: "Explain circuit breakers briefly.",
-  providers: %i[anthropic openai local_node],
-  fallback: true
+response = AiAgentRouter.execute(
+  intent: "Explain circuit breakers briefly.",
+  strategy: :auto
 )
 
 puts response.content

@@ -22,15 +22,17 @@ bundle exec rake test
 ## Testing
 
 Unit tests must not require live provider credentials. Stub HTTP with WebMock or inject stub providers.
+Native FFI tests skip automatically when `chimera_core` is not compiled.
 
 ```bash
 bundle exec rake test
+bundle exec rake compile   # optional — requires Rust/cargo
 ```
 
 ## Releases
 
 Maintainers cut releases by tagging `vX.Y.Z` on `main`, which triggers the
-RubyGems Trusted Publisher workflow (`.github/workflows/push_gem.yml`).
+RubyGems Trusted Publisher workflow (`.github/workflows/release.yml`).
 
 See the README for Trusted Publisher setup details.
 

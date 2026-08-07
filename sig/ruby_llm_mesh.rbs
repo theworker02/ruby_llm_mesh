@@ -19,6 +19,12 @@ module RubyLlmMesh
     attr_accessor circuit_failure_threshold: Integer
     attr_accessor circuit_reset_timeout: Integer
     attr_accessor logger: untyped
+    attr_accessor mesh_port: Integer
+    attr_accessor fallback_providers: Array[Symbol]
+    attr_accessor auto_boot_mesh: bool
+    attr_accessor semantic_cache_enabled: bool
+    attr_accessor peer_discovery_enabled: bool
+    attr_accessor peer_urls: Array[String]
   end
 
   def self.configuration: () -> Configuration
@@ -31,6 +37,9 @@ module RubyLlmMesh
     **untyped
   ) -> Response
   def self.chat: (**untyped) -> Response
+  def self.execute: (intent: String, ?strategy: Symbol, **untyped) -> Response
+  def self.boot_mesh!: (?port: Integer) -> bool
+  def self.mesh_alive?: () -> bool
 
   class Response
     attr_reader content: String
@@ -40,6 +49,7 @@ module RubyLlmMesh
     attr_reader raw: untyped
     attr_reader latency_ms: Integer?
     attr_reader fallback_used: bool
+    attr_reader cache_hit: bool
 
     def initialize: (
       content: String,
@@ -48,7 +58,8 @@ module RubyLlmMesh
       ?usage: Hash[untyped, untyped],
       ?raw: untyped,
       ?latency_ms: Integer?,
-      ?fallback_used: bool
+      ?fallback_used: bool,
+      ?cache_hit: bool
     ) -> void
     def text: () -> String
     def to_s: () -> String
@@ -66,6 +77,20 @@ module RubyLlmMesh
     ) -> Response
   end
 
+  class SovereignMesh
+    def execute: (intent: String, ?strategy: Symbol, **untyped) -> Response
+    def boot!: (?port: Integer) -> bool
+    def alive?: () -> bool
+  end
+
+  module NativeCore
+    def self.available?: () -> bool
+    def self.start_node: (?Integer) -> bool
+    def self.stop_node: () -> bool
+    def self.node_alive?: () -> bool
+    def self.execute_wasm_payload: (String) -> Hash[String, untyped]
+  end
+
   class CircuitBreaker
     def allow?: (Symbol) -> bool
     def record_success: (Symbol) -> void
@@ -77,6 +102,9 @@ end
 
 module AiAgentRouter
   def self.complete: (**untyped) -> RubyLlmMesh::Response
+  def self.execute: (**untyped) -> RubyLlmMesh::Response
   def self.configure: () { (RubyLlmMesh::Configuration) -> void } -> void
   def self.configuration: () -> RubyLlmMesh::Configuration
+  def self.boot_mesh!: (**untyped) -> bool
+  def self.mesh_alive?: () -> bool
 end
