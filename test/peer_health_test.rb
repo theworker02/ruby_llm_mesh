@@ -37,6 +37,45 @@ class PeerHealthTest < Minitest::Test
     assert_includes healthy, "http://127.0.0.1:1234"
   end
 
+  def test_healthy_urls_empty_when_all_peers_unhealthy
+    registry = RubyLlmMesh::Mesh::PeerRegistry.instance
+    registry.mark_unhealthy("http://127.0.0.1:11434", error: "down")
+    registry.mark_unhealthy("http://127.0.0.1:1234", error: "down")
+    assert_empty registry.healthy_urls
+  end
+
+  def test_local_node_last_resort_when_all_peers_unhealthy
+    RubyLlmMesh.configure do |c|
+      c.peer_discovery_enabled = true
+      c.peer_urls = %w[http://peer-a:11434 http://peer-b:11434]
+      c.local_node_base_url = "http://primary:11434"
+      c.local_node_model = "llama3.2"
+    end
+    RubyLlmMesh::Mesh::PeerRegistry.reset!
+
+    registry = RubyLlmMesh::Mesh::PeerRegistry.instance
+    registry.mark_unhealthy("http://peer-a:11434", error: "down")
+    registry.mark_unhealthy("http://peer-b:11434", error: "down")
+    registry.mark_unhealthy("http://primary:11434", error: "down")
+    assert_empty registry.healthy_urls
+
+    stub_request(:post, "http://primary:11434/v1/chat/completions")
+      .to_return(
+        status: 200,
+        headers: { "Content-Type" => "application/json" },
+        body: {
+          model: "llama3.2",
+          choices: [{ message: { content: "last-resort" } }],
+          usage: {}
+        }.to_json
+      )
+
+    provider = RubyLlmMesh::Providers::LocalNode.new
+    response = provider.complete(prompt: "hi")
+    assert_equal "last-resort", response.content
+    assert_equal "http://primary:11434", response.raw["_peer"]
+  end
+
   def test_health_monitor_marks_peer_from_http
     stub_request(:get, "http://127.0.0.1:11434/api/tags").to_return(status: 200, body: "{}")
     stub_request(:get, "http://127.0.0.1:1234/api/tags").to_return(status: 500, body: "err")

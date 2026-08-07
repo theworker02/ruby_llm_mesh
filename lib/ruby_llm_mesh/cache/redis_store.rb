@@ -34,9 +34,13 @@ module RubyLlmMesh
 
       def all
         ids = @redis.smembers(INDEX_KEY)
-        ids.filter_map do |id|
+        stale = []
+        entries = ids.filter_map do |id|
           raw = @redis.get("#{ENTRY_PREFIX}#{id}")
-          next unless raw
+          unless raw
+            stale << id
+            next
+          end
 
           data = JSON.parse(raw)
           MemoryStore::Entry.new(
@@ -47,8 +51,11 @@ module RubyLlmMesh
             expires_at: data["expires_at"] ? Time.at(data["expires_at"]) : nil
           )
         rescue JSON::ParserError
+          stale << id
           nil
         end
+        cleanup_stale_index!(stale)
+        entries
       end
 
       def write(id:, prompt:, embedding:, payload:, ttl:)
@@ -83,6 +90,20 @@ module RubyLlmMesh
 
       def size
         all.length
+      end
+
+      private
+
+      def cleanup_stale_index!(ids)
+        return if ids.nil? || ids.empty?
+
+        ids.each do |id|
+          begin
+            @redis.srem(INDEX_KEY, [id])
+          rescue ArgumentError, TypeError, Redis::CommandError
+            @redis.srem(INDEX_KEY, id)
+          end
+        end
       end
     end
   end

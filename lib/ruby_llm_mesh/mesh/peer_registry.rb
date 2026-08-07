@@ -59,9 +59,10 @@ module RubyLlmMesh
       def healthy_urls
         seed_from_config!
         @mutex.synchronize do
-          urls = @peers.values.select(&:healthy).map(&:url)
-          urls = peer_urls if urls.empty?
-          urls
+          # Only return peers currently marked healthy. When every peer is
+          # unhealthy, return [] so callers (e.g. LocalNode) can apply their
+          # own last-resort fallback — never reintroduce unhealthy URLs.
+          @peers.values.select(&:healthy).map(&:url)
         end
       end
 

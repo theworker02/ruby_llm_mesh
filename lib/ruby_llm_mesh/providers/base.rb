@@ -2,6 +2,7 @@
 
 require "json"
 require "net/http"
+require "openssl"
 require "uri"
 
 module RubyLlmMesh
@@ -41,7 +42,10 @@ module RubyLlmMesh
         [response, latency_ms]
       rescue Net::OpenTimeout, Net::ReadTimeout, Timeout::Error => e
         raise TimeoutError.new(e.message, provider: name)
-      rescue SocketError, Errno::ECONNREFUSED, Errno::EHOSTUNREACH, Errno::ETIMEDOUT => e
+      rescue SocketError, EOFError, IOError, OpenSSL::SSL::SSLError,
+             Errno::ECONNREFUSED, Errno::ECONNRESET, Errno::EHOSTUNREACH,
+             Errno::ENETUNREACH, Errno::ETIMEDOUT, Errno::EPIPE => e
+        # Wrap transport failures so the router can trip circuits / fall back
         raise ProviderError.new(e.message, provider: name)
       end
 

@@ -190,6 +190,11 @@ Docs: [https://theworker02.github.io/ruby_llm_mesh/](https://theworker02.github.
 
 Designed with [Cursor](https://cursor.com) models Opus and Fable 5.
 
+## Community & policies
+
+- [Code of Conduct](CODE_OF_CONDUCT.md) — Contributor Covenant 2.1; see also [CONTRIBUTING.md](CONTRIBUTING.md)
+- [Privacy Policy](PRIVACY.md) — no phone-home telemetry; prompts and API keys stay with endpoints you configure
+
 ## License
 
 MIT — see [LICENSE.txt](LICENSE.txt).

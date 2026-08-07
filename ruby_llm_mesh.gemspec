@@ -48,6 +48,8 @@ Gem::Specification.new do |spec|
       "README*",
       "CHANGELOG*",
       "CODE_OF_CONDUCT*",
+      "PRIVACY*",
+      "CONTRIBUTING*",
       "*.gemspec",
       "Rakefile"
     ].reject { |f| f.include?("/target/") || f.end_with?(".gem") }

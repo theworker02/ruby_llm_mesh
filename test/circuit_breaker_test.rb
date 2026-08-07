@@ -29,9 +29,17 @@ class CircuitBreakerTest < Minitest::Test
     breaker.record_failure(:local_node)
     assert_equal :open, breaker.state_for(:local_node)
 
-    # reset_timeout 0 => allow? transitions to half_open
+    # reset_timeout 0 => allow? transitions to half_open (single probe)
     assert breaker.allow?(:local_node)
     assert_equal :half_open, breaker.state_for(:local_node)
+  end
+
+  def test_half_open_allows_only_one_probe
+    breaker = RubyLlmMesh::CircuitBreaker.new(failure_threshold: 1, reset_timeout: 0)
+    breaker.record_failure(:openai)
+    assert breaker.allow?(:openai) # OPEN → HALF_OPEN probe
+    refute breaker.allow?(:openai) # further probes blocked until outcome recorded
+    assert_equal :half_open, breaker.state_for(:openai)
   end
 
   def test_half_open_failure_reopens

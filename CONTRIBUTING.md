@@ -39,3 +39,7 @@ See the README for Trusted Publisher setup details.
 ## Code of Conduct
 
 By participating, you agree to uphold our [Code of Conduct](CODE_OF_CONDUCT.md).
+
+## Privacy
+
+See [PRIVACY.md](PRIVACY.md) for how this gem handles data (no phone-home telemetry; prompts go only to endpoints you configure).

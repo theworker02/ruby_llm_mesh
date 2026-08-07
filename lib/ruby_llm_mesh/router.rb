@@ -68,6 +68,7 @@ module RubyLlmMesh
 
         unless PROVIDER_MAP.key?(provider_name)
           errors[provider_name] = ProviderError.new("Unknown provider: #{provider_name}", provider: provider_name)
+          break unless use_fallback
           next
         end
 
@@ -77,6 +78,7 @@ module RubyLlmMesh
             provider: provider_name
           )
           log(:warn, "Skipping #{provider_name} — circuit open")
+          break unless use_fallback
           next
         end
 

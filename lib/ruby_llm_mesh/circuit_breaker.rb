@@ -22,13 +22,23 @@ module RubyLlmMesh
           true
         when OPEN
           if Time.now - entry[:opened_at] >= @reset_timeout
+            # Single probe: transition to half-open and allow only this caller.
             entry[:state] = HALF_OPEN
+            entry[:opened_at] = Time.now
             true
           else
             false
           end
         when HALF_OPEN
-          true
+          # If the probe never reported (hung request), allow another after timeout.
+          # With reset_timeout 0, stay blocked until success/failure is recorded.
+          if @reset_timeout.positive? && entry[:opened_at] &&
+             Time.now - entry[:opened_at] >= @reset_timeout
+            entry[:opened_at] = Time.now
+            true
+          else
+            false
+          end
         end
       end
     end

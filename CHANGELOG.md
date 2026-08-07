@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Full Contributor Covenant 2.1 [Code of Conduct](CODE_OF_CONDUCT.md) with enforcement guidelines
+- [Privacy Policy](PRIVACY.md) for the OSS LLM routing gem (no phone-home; data stays with configured endpoints)
+- README, CONTRIBUTING, and docs site links to Code of Conduct and Privacy Policy
+
+### Fixed
+
+- Router now honors `fallback: false` when a provider circuit is open or the provider name is unknown (no longer silently continues the ladder)
+- `PeerRegistry#healthy_urls` no longer reintroduces unhealthy peers when the healthy set is empty (LocalNode uses its primary URL as last resort)
+- Circuit breaker half-open state allows a single probe (not unbounded concurrent probes)
+- HTTP client wraps connection reset / SSL / EOF transport errors as `ProviderError` so failover works
+- Redis semantic-cache index cleans up stale entry IDs after TTL expiry
+
 ## [2.0.0] - 2026-08-07
 
 ### Added
