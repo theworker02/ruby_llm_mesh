@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ruby_llm_mesh — Unified AI routing for Ruby</title>
+  <meta name="description" content="Multi-provider AI routing with circuit breaking, fallback, and RAG helpers for Ruby & Rails." />
+  <link rel="icon" href="assets/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-mesh" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <a class="brand" href="./">
+      <img src="assets/logo.png" alt="" width="36" height="36" />
+      <span>ruby_llm_mesh</span>
+    </a>
+    <nav>
+      <a href="https://rubygems.org/gems/ruby_llm_mesh">RubyGems</a>
+      <a href="https://github.com/theworker02/ruby_llm_mesh">GitHub</a>
+      <a href="https://github.com/theworker02/ruby_llm_mesh#readme">Docs</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <img class="hero-logo" src="assets/logo.png" alt="ruby_llm_mesh logo" width="120" height="120" />
+      <h1>ruby_llm_mesh</h1>
+      <p class="lede">
+        Route prompts across OpenAI, Anthropic, and local nodes with one DSL —
+        circuit breaking, fallback ladders, and RAG helpers for Ruby &amp; Rails.
+      </p>
+      <div class="cta-row">
+        <a class="btn primary" href="https://rubygems.org/gems/ruby_llm_mesh">Install from RubyGems</a>
+        <a class="btn ghost" href="https://github.com/theworker02/ruby_llm_mesh">View source</a>
+      </div>
+      <pre class="install"><code>gem install ruby_llm_mesh</code></pre>
+    </section>
+
+    <section class="features" id="features">
+      <h2>Features</h2>
+      <div class="feature-grid">
+        <article>
+          <h3>Unified DSL</h3>
+          <p><code>AiAgentRouter.complete</code> talks to multiple providers with a single call shape.</p>
+        </article>
+        <article>
+          <h3>Circuit breaking</h3>
+          <p>Per-provider failure tracking opens circuits and skips unhealthy backends.</p>
+        </article>
+        <article>
+          <h3>Fallback ladders</h3>
+          <p>Automatically continue down the provider list when one call fails.</p>
+        </article>
+        <article>
+          <h3>RAG helpers</h3>
+          <p>Chunking, local embeddings, and tool schema adapters for OpenAI and Anthropic.</p>
+        </article>
+        <article>
+          <h3>Rails ready</h3>
+          <p>Optional <code>acts_as_ai_agent</code> for memory, cache, and audit trails.</p>
+        </article>
+        <article>
+          <h3>Local nodes</h3>
+          <p>Works with Ollama, LM Studio, vLLM, and other OpenAI-compatible servers.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="quickstart" id="quickstart">
+      <h2>Quickstart</h2>
+      <pre class="code"><code>require "ruby_llm_mesh"
+
+AiAgentRouter.configure do |c|
+  c.openai_api_key = ENV["OPENAI_API_KEY"]
+  c.anthropic_api_key = ENV["ANTHROPIC_API_KEY"]
+  c.default_providers = %i[anthropic openai local_node]
+end
+
+response = AiAgentRouter.complete(
+  prompt: "Explain circuit breakers briefly.",
+  providers: %i[anthropic openai local_node],
+  fallback: true
+)
+
+puts response.content
+puts response.provider</code></pre>
+    </section>
+
+    <section class="links">
+      <h2>Links</h2>
+      <ul>
+        <li><a href="https://rubygems.org/gems/ruby_llm_mesh">Official RubyGems page</a></li>
+        <li><a href="https://github.com/theworker02/ruby_llm_mesh">GitHub repository</a></li>
+        <li><a href="https://github.com/theworker02/ruby_llm_mesh/blob/main/CHANGELOG.md">Changelog</a></li>
+        <li><a href="https://github.com/theworker02/ruby_llm_mesh/blob/main/LICENSE.txt">MIT License</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>ruby_llm_mesh · MIT · Brand colors <span class="swatch ruby"></span> <span class="swatch coral"></span> <span class="swatch charcoal"></span></p>
+  </footer>
+</body>
+</html>

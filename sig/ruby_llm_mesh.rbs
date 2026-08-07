@@ -1,0 +1,82 @@
+# frozen_string_literal: true
+
+module RubyLlmMesh
+  VERSION: String
+
+  class Configuration
+    attr_accessor default_providers: Array[Symbol]
+    attr_accessor fallback: bool
+    attr_accessor timeout: Integer
+    attr_accessor max_retries: Integer
+    attr_accessor openai_api_key: String?
+    attr_accessor openai_base_url: String
+    attr_accessor openai_model: String
+    attr_accessor anthropic_api_key: String?
+    attr_accessor anthropic_base_url: String
+    attr_accessor anthropic_model: String
+    attr_accessor local_node_base_url: String
+    attr_accessor local_node_model: String
+    attr_accessor circuit_failure_threshold: Integer
+    attr_accessor circuit_reset_timeout: Integer
+    attr_accessor logger: untyped
+  end
+
+  def self.configuration: () -> Configuration
+  def self.configure: () { (Configuration) -> void } -> void
+  def self.reset_configuration!: () -> void
+  def self.complete: (
+    prompt: String,
+    ?providers: Array[Symbol]?,
+    ?fallback: bool?,
+    **untyped
+  ) -> Response
+  def self.chat: (**untyped) -> Response
+
+  class Response
+    attr_reader content: String
+    attr_reader provider: Symbol
+    attr_reader model: String?
+    attr_reader usage: Hash[untyped, untyped]
+    attr_reader raw: untyped
+    attr_reader latency_ms: Integer?
+    attr_reader fallback_used: bool
+
+    def initialize: (
+      content: String,
+      provider: Symbol,
+      ?model: String?,
+      ?usage: Hash[untyped, untyped],
+      ?raw: untyped,
+      ?latency_ms: Integer?,
+      ?fallback_used: bool
+    ) -> void
+    def text: () -> String
+    def to_s: () -> String
+    def to_h: () -> Hash[Symbol, untyped]
+  end
+
+  class Router
+    def complete: (
+      prompt: String,
+      ?providers: Array[Symbol]?,
+      ?fallback: bool?,
+      ?system: String?,
+      ?model: String?,
+      **untyped
+    ) -> Response
+  end
+
+  class CircuitBreaker
+    def allow?: (Symbol) -> bool
+    def record_success: (Symbol) -> void
+    def record_failure: (Symbol) -> void
+    def state_for: (Symbol) -> Symbol
+    def reset!: (?Symbol?) -> void
+  end
+end
+
+module AiAgentRouter
+  def self.complete: (**untyped) -> RubyLlmMesh::Response
+  def self.configure: () { (RubyLlmMesh::Configuration) -> void } -> void
+  def self.configuration: () -> RubyLlmMesh::Configuration
+end
