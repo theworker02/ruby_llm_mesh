@@ -5,6 +5,7 @@ require_relative "ruby_llm_mesh/errors"
 require_relative "ruby_llm_mesh/configuration"
 require_relative "ruby_llm_mesh/response"
 require_relative "ruby_llm_mesh/circuit_breaker"
+require_relative "ruby_llm_mesh/budget"
 require_relative "ruby_llm_mesh/providers/base"
 require_relative "ruby_llm_mesh/providers/openai"
 require_relative "ruby_llm_mesh/providers/anthropic"
@@ -48,6 +49,10 @@ module RubyLlmMesh
     def mesh_alive?
       NativeCore.node_alive?
     end
+
+    def budget_status
+      Budget.instance(config: configuration).status
+    end
   end
 end
 
@@ -75,5 +80,9 @@ module AiAgentRouter
 
   def self.mesh_alive?
     RubyLlmMesh.mesh_alive?
+  end
+
+  def self.budget_status
+    RubyLlmMesh.budget_status
   end
 end

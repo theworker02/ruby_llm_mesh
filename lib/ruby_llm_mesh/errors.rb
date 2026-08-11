@@ -21,6 +21,17 @@ module RubyLlmMesh
   class AuthenticationError < ProviderError; end
   class CircuitOpenError < ProviderError; end
 
+  class BudgetExceededError < Error
+    attr_reader :dimension, :consumed, :limit
+
+    def initialize(message, dimension: nil, consumed: nil, limit: nil)
+      @dimension = dimension
+      @consumed = consumed
+      @limit = limit
+      super(message)
+    end
+  end
+
   class AllProvidersFailedError < Error
     attr_reader :errors
 

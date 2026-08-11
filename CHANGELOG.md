@@ -5,10 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.1.0] - 2026-08-11
 
 ### Added
 
+- **Token/cost budget guard** — opt-in via `budget_enabled`, `budget_max_tokens`, `budget_max_usd`, and `budget_prices`
+- `RubyLlmMesh::Budget` pre-checks estimated usage before provider calls and consumes actual usage from `Response#usage` after success
+- `RubyLlmMesh::BudgetExceededError` when token or USD limits would be exceeded
+- `RubyLlmMesh.budget_status` / `AiAgentRouter.budget_status` for runtime budget telemetry
 - Full Contributor Covenant 2.1 [Code of Conduct](CODE_OF_CONDUCT.md) with enforcement guidelines
 - [Privacy Policy](PRIVACY.md) for the OSS LLM routing gem (no phone-home; data stays with configured endpoints)
 - README, CONTRIBUTING, and docs site links to Code of Conduct and Privacy Policy
@@ -60,5 +64,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documentation site on GitHub Pages
 - Trusted publishing workflow for RubyGems OIDC releases
 
+[2.1.0]: https://github.com/theworker02/ruby_llm_mesh/releases/tag/v2.1.0
 [2.0.0]: https://github.com/theworker02/ruby_llm_mesh/releases/tag/v2.0.0
 [0.1.0]: https://github.com/theworker02/ruby_llm_mesh/releases/tag/v0.1.0
