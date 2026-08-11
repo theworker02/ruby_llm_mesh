@@ -30,6 +30,7 @@ class Minitest::Test
     RubyLlmMesh::Mesh::PeerRegistry.reset!
     RubyLlmMesh::Mesh::HealthMonitor.reset!
     RubyLlmMesh::NativeCore.reset!
+    RubyLlmMesh::Budget.reset!
     WebMock.reset!
   end
 end

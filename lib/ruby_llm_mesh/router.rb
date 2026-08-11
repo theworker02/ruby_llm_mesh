@@ -35,10 +35,11 @@ module RubyLlmMesh
     end
 
     def initialize(config: RubyLlmMesh.configuration, circuit_breaker: self.class.circuit_breaker,
-                   semantic_cache: nil)
+                   semantic_cache: nil, budget: nil)
       @config = config
       @circuit_breaker = circuit_breaker
       @semantic_cache = semantic_cache
+      @budget = budget
     end
 
     def complete(prompt:, providers: nil, fallback: nil, system: nil, model: nil, **options)
@@ -85,8 +86,14 @@ module RubyLlmMesh
         begin
           attempted += 1
           log(:info, "Routing to #{provider_name}")
+          budget = resolve_budget
+          estimated_tokens = Budget.estimate_tokens(prompt: prompt, system: system, max_tokens: options[:max_tokens])
+          estimated_usd = Budget.estimate_usd(tokens: estimated_tokens, model: model, config: @config)
+          budget.check!(estimated_tokens: estimated_tokens, estimated_usd: estimated_usd)
+
           provider = PROVIDER_MAP[provider_name].new(@config)
           response = provider.complete(prompt: prompt, system: system, model: model, **options)
+          budget.consume!(usage: response.usage, provider: provider_name, model: response.model || model)
           @circuit_breaker.record_success(circuit_key)
 
           result = Response.new(
@@ -101,6 +108,8 @@ module RubyLlmMesh
           )
           cache&.store_response(prompt, result, system: system) unless skip_cache
           return result
+        rescue BudgetExceededError
+          raise
         rescue RateLimitError => e
           # Trip circuit immediately so subsequent requests skip this provider
           force_open_circuit!(circuit_key)
@@ -125,6 +134,12 @@ module RubyLlmMesh
       return nil unless @config.semantic_cache_enabled
 
       Cache::SemanticCache.instance(config: @config)
+    end
+
+    def resolve_budget
+      return @budget if @budget
+
+      Budget.instance(config: @config)
     end
 
     def circuit_key_for(provider_name)

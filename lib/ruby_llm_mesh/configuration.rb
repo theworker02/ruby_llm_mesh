@@ -14,7 +14,8 @@ module RubyLlmMesh
                   :redis_url, :semantic_cache_backend,
                   :peer_discovery_enabled, :peer_urls,
                   :peer_health_interval, :peer_health_timeout,
-                  :peer_health_path
+                  :peer_health_path,
+                  :budget_enabled, :budget_max_tokens, :budget_max_usd, :budget_prices
 
     def initialize
       @default_providers = %i[openai anthropic local_node]
@@ -57,7 +58,27 @@ module RubyLlmMesh
       @peer_health_interval = Integer(ENV.fetch("RUBY_LLM_MESH_PEER_HEALTH_INTERVAL", "30"))
       @peer_health_timeout = Integer(ENV.fetch("RUBY_LLM_MESH_PEER_HEALTH_TIMEOUT", "2"))
       @peer_health_path = ENV.fetch("RUBY_LLM_MESH_PEER_HEALTH_PATH", "/api/tags")
+
+      # Token/cost budget guard — opt-in
+      @budget_enabled = ENV.fetch("RUBY_LLM_MESH_BUDGET_ENABLED", "false") == "true"
+      @budget_max_tokens = integer_env("RUBY_LLM_MESH_BUDGET_MAX_TOKENS")
+      @budget_max_usd = float_env("RUBY_LLM_MESH_BUDGET_MAX_USD")
+      @budget_prices = {}
     end
+
+    private
+
+    def integer_env(key)
+      value = ENV.fetch(key, nil)
+      value.nil? || value.empty? ? nil : Integer(value)
+    end
+
+    def float_env(key)
+      value = ENV.fetch(key, nil)
+      value.nil? || value.empty? ? nil : Float(value)
+    end
+
+    public
   end
 
   class << self
@@ -75,6 +96,7 @@ module RubyLlmMesh
       Cache::SemanticCache.reset! if defined?(Cache::SemanticCache)
       Mesh::PeerRegistry.reset! if defined?(Mesh::PeerRegistry)
       Mesh::HealthMonitor.reset! if defined?(Mesh::HealthMonitor)
+      Budget.reset! if defined?(Budget)
     end
   end
 end
