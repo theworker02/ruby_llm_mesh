@@ -15,13 +15,15 @@ module RubyLlmMesh
                   :peer_discovery_enabled, :peer_urls,
                   :peer_health_interval, :peer_health_timeout,
                   :peer_health_path,
-                  :budget_enabled, :budget_max_tokens, :budget_max_usd, :budget_prices
+                  :budget_enabled, :budget_max_tokens, :budget_max_usd, :budget_prices,
+                  :retry_backoff
 
     def initialize
       @default_providers = %i[openai anthropic local_node]
       @fallback = true
       @timeout = 30
       @max_retries = 1
+      @retry_backoff = Float(ENV.fetch("RUBY_LLM_MESH_RETRY_BACKOFF", "0.1"))
 
       @openai_api_key = ENV.fetch("OPENAI_API_KEY", nil)
       @openai_base_url = ENV.fetch("OPENAI_BASE_URL", "https://api.openai.com/v1")

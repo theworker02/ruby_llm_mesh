@@ -8,6 +8,7 @@ module RubyLlmMesh
     attr_accessor fallback: bool
     attr_accessor timeout: Integer
     attr_accessor max_retries: Integer
+    attr_accessor retry_backoff: Float
     attr_accessor openai_api_key: String?
     attr_accessor openai_base_url: String
     attr_accessor openai_model: String

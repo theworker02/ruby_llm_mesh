@@ -92,7 +92,9 @@ module RubyLlmMesh
           budget.check!(estimated_tokens: estimated_tokens, estimated_usd: estimated_usd)
 
           provider = PROVIDER_MAP[provider_name].new(@config)
-          response = provider.complete(prompt: prompt, system: system, model: model, **options)
+          response = with_retries(provider_name) do
+            provider.complete(prompt: prompt, system: system, model: model, **options)
+          end
           budget.consume!(usage: response.usage, provider: provider_name, model: response.model || model)
           @circuit_breaker.record_success(circuit_key)
 
@@ -110,6 +112,11 @@ module RubyLlmMesh
           return result
         rescue BudgetExceededError
           raise
+        rescue AuthenticationError => e
+          @circuit_breaker.record_failure(circuit_key)
+          errors[provider_name] = e
+          log(:error, "#{provider_name} authentication failed: #{e.message}")
+          break unless use_fallback
         rescue RateLimitError => e
           # Trip circuit immediately so subsequent requests skip this provider
           force_open_circuit!(circuit_key)
@@ -158,6 +165,43 @@ module RubyLlmMesh
     def force_open_circuit!(circuit_key)
       threshold = @config.circuit_failure_threshold
       threshold.times { @circuit_breaker.record_failure(circuit_key) }
+    end
+
+    def with_retries(provider_name)
+      attempts = 1 + [Integer(@config.max_retries || 0), 0].max
+      last_error = nil
+
+      attempts.times do |index|
+        return yield
+      rescue AuthenticationError, BudgetExceededError
+        raise
+      rescue RateLimitError, TimeoutError, ProviderError => error
+        last_error = error
+        remaining = attempts - index - 1
+        unless retryable_error?(error) && remaining.positive?
+          raise error
+        end
+
+        delay = retry_delay(index)
+        log(:warn, "#{provider_name} attempt #{index + 1}/#{attempts} failed (#{error.class}): #{error.message}; retrying in #{delay}s")
+        sleep(delay) if delay.positive?
+      end
+
+      raise last_error
+    end
+
+    def retryable_error?(error)
+      return false if error.is_a?(AuthenticationError)
+      return true if error.is_a?(TimeoutError) || error.is_a?(RateLimitError)
+      return false unless error.is_a?(ProviderError)
+
+      status = error.status
+      status.nil? || status >= 500 || status == 429
+    end
+
+    def retry_delay(attempt)
+      base = Float(@config.retry_backoff || 0)
+      base * (2**attempt)
     end
 
     def log(level, message)

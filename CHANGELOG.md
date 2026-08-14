@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2026-08-14
+
+### Added
+
+- **Provider retries with exponential backoff** — `max_retries` now retries transient `TimeoutError`, `RateLimitError`, and 5xx/transport `ProviderError`s before falling over
+- `retry_backoff` (default `0.1s`, env `RUBY_LLM_MESH_RETRY_BACKOFF`) doubles after each failed attempt
+- Authentication failures are never retried; they fail over immediately when fallback is enabled
+
 ## [2.1.0] - 2026-08-11
 
 ### Added
@@ -64,6 +72,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documentation site on GitHub Pages
 - Trusted publishing workflow for RubyGems OIDC releases
 
+[2.2.0]: https://github.com/theworker02/ruby_llm_mesh/releases/tag/v2.2.0
 [2.1.0]: https://github.com/theworker02/ruby_llm_mesh/releases/tag/v2.1.0
 [2.0.0]: https://github.com/theworker02/ruby_llm_mesh/releases/tag/v2.0.0
 [0.1.0]: https://github.com/theworker02/ruby_llm_mesh/releases/tag/v0.1.0

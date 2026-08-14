@@ -109,6 +109,8 @@ Cloud paths call the real provider HTTP clients — they are **not** stubbed sim
 | `default_providers` | `%i[openai anthropic local_node]` | Ladder for `complete` |
 | `fallback` | `true` | Continue to next provider on failure |
 | `timeout` | `30` | HTTP open/read timeout (seconds) |
+| `max_retries` | `1` | Extra attempts on timeout, 5xx, and rate-limit errors |
+| `retry_backoff` | `0.1` | Base delay (seconds) doubled after each retry |
 | `openai_*` / `anthropic_*` / `local_node_*` | env-backed | Provider credentials & endpoints |
 | `circuit_failure_threshold` / `circuit_reset_timeout` | `3` / `60` | Circuit breaker |
 | `semantic_cache_enabled` | `false` | Opt-in vector similarity cache |
