@@ -23,7 +23,7 @@
 
 > **Gem name:** `ruby_llm_mesh` (underscores) — matches this GitHub repo and the official RubyGems listing. Do not confuse with hyphenated names in design sketches.
 
-## What it does (v2.0.0)
+## What it does (v2.2.0)
 
 `ruby_llm_mesh` routes intents across:
 
@@ -31,6 +31,8 @@
 2. **Real cloud / local LLM HTTP** — OpenAI, Anthropic, and OpenAI-compatible nodes (Ollama, LM Studio, …)
 
 When the native library is not compiled, a pure-Ruby fallback keeps the API working. Circuit breaking, optional semantic cache, peer health for multi-node local meshes, RAG helpers, and Rails hooks remain available.
+
+**2.2.0** retries transient provider failures (`TimeoutError`, rate limits, and 5xx/transport errors) with exponential backoff (`max_retries` / `retry_backoff`) before falling over to the next provider. Authentication failures are never retried. Published on [RubyGems 2.2.0](https://rubygems.org/gems/ruby_llm_mesh/versions/2.2.0).
 
 ## Install
 
@@ -46,7 +48,7 @@ gem "ruby_llm_mesh"
 
 Then `bundle install`.
 
-Gem page: [rubygems.org/gems/ruby_llm_mesh](https://rubygems.org/gems/ruby_llm_mesh)
+Gem page: [rubygems.org/gems/ruby_llm_mesh](https://rubygems.org/gems/ruby_llm_mesh) · current: [2.2.0](https://rubygems.org/gems/ruby_llm_mesh/versions/2.2.0)
 
 ### Compile the native core (optional)
 
@@ -155,6 +157,11 @@ end
 - Install `ffi` (declared dependency). Compile native core only if you want the Rust engine.
 - If you configured RubyGems trusted publishing against `push_gem.yml`, update the workflow filename to **`release.yml`**.
 
+## Upgrading from 2.1.0 → 2.2.0
+
+- Bump to [2.2.0 on RubyGems](https://rubygems.org/gems/ruby_llm_mesh/versions/2.2.0).
+- Transient provider failures now retry with exponential backoff (`max_retries`, `retry_backoff`) before failover. Authentication failures still skip retries.
+
 ## Development
 
 ```bash
@@ -176,7 +183,7 @@ Releases publish via [RubyGems Trusted Publishing](https://guides.rubygems.org/t
 | Workflow filename | `release.yml` |
 | Environment name | `release` |
 
-Create a GitHub Environment named `release`. Pushing tag `v2.0.0` runs OIDC publish via `rubygems/release-gem@v1`.
+Create a GitHub Environment named `release`. Pushing tag `v2.2.0` (or any `v*` tag) runs OIDC publish via `rubygems/release-gem@v1`.
 
 ## Branding
 
