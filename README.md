@@ -6,7 +6,7 @@
 
 <p align="center">
   Sovereign multi-provider AI mesh for Ruby &amp; Rails<br/>
-  <code>AiAgentRouter</code> Â· native FFI core Â· circuit breaking Â· cloud failover
+  <code>AiAgentRouter</code> Ã‚Â· native FFI core Ã‚Â· circuit breaking Ã‚Â· cloud failover
 </p>
 
 <p align="center">
@@ -21,14 +21,14 @@
   <a href="https://rubygems.org/gems/ruby_llm_mesh">https://rubygems.org/gems/ruby_llm_mesh</a>
 </p>
 
-> **Gem name:** `ruby_llm_mesh` (underscores) â€” matches this GitHub repo and the official RubyGems listing. Do not confuse with hyphenated names in design sketches.
+> **Gem name:** `ruby_llm_mesh` (underscores) Ã¢â‚¬â€ matches this GitHub repo and the official RubyGems listing. Do not confuse with hyphenated names in design sketches.
 
 ## What it does (v2.2.0)
 
 `ruby_llm_mesh` routes intents across:
 
 1. A **native sovereign mesh** (`chimera_core` Rust cdylib via FFI) for local P2P-style execution
-2. **Real cloud / local LLM HTTP** â€” OpenAI, Anthropic, and OpenAI-compatible nodes (Ollama, LM Studio, â€¦)
+2. **Real cloud / local LLM HTTP** Ã¢â‚¬â€ OpenAI, Anthropic, and OpenAI-compatible nodes (Ollama, LM Studio, Ã¢â‚¬Â¦)
 
 When the native library is not compiled, a pure-Ruby fallback keeps the API working. Circuit breaking, optional semantic cache, peer health for multi-node local meshes, RAG helpers, and Rails hooks remain available.
 
@@ -48,7 +48,7 @@ gem "ruby_llm_mesh"
 
 Then `bundle install`.
 
-Gem page: [rubygems.org/gems/ruby_llm_mesh](https://rubygems.org/gems/ruby_llm_mesh) Â· current: [2.2.0](https://rubygems.org/gems/ruby_llm_mesh/versions/2.2.0)
+Gem page: [rubygems.org/gems/ruby_llm_mesh](https://rubygems.org/gems/ruby_llm_mesh) Ã‚Â· current: [2.2.0](https://rubygems.org/gems/ruby_llm_mesh/versions/2.2.0)
 
 ### Compile the native core (optional)
 
@@ -56,7 +56,7 @@ Requires [Rust](https://rustup.rs) / `cargo`:
 
 ```bash
 bundle exec rake compile
-# â†’ ext/chimera_core/target/release/libchimera_core.so (or .dylib / .dll)
+# Ã¢â€ â€™ ext/chimera_core/target/release/libchimera_core.so (or .dylib / .dll)
 ```
 
 Without compile, `NativeCore` uses an in-process Ruby fallback. `require "ruby_llm_mesh"` never crashes on a missing `.so`.
@@ -99,7 +99,7 @@ response = AiAgentRouter.complete(
 | `:cloud` | HTTP via `fallback_providers` / `default_providers` |
 | `:openai` / `:anthropic` / `:local_node` / `:local_mesh` | Single-provider routing |
 
-Cloud paths call the real provider HTTP clients â€” they are **not** stubbed simulation strings.
+Cloud paths call the real provider HTTP clients Ã¢â‚¬â€ they are **not** stubbed simulation strings.
 
 ## Configuration
 
@@ -127,7 +127,7 @@ Cloud paths call the real provider HTTP clients â€” they are **not** stubbe
 |----------|------|
 | `start_node(port)` | `RubyLlmMesh.boot_mesh!` / `NativeCore.start_node` |
 | `node_alive()` | `RubyLlmMesh.mesh_alive?` / `NativeCore.node_alive?` |
-| `execute_wasm_payload(intent)` | `NativeCore.execute_wasm_payload` â†’ Hash |
+| `execute_wasm_payload(intent)` | `NativeCore.execute_wasm_payload` Ã¢â€ â€™ Hash |
 | `stop_node()` | `NativeCore.stop_node` |
 
 ## Circuit breaker & providers
@@ -150,14 +150,14 @@ class Conversation < ApplicationRecord
 end
 ```
 
-## Upgrading from 0.1.0 â†’ 2.0.0
+## Upgrading from 0.1.0 Ã¢â€ â€™ 2.0.0
 
 - Bump the gem to `2.0.0` (`~> 0.1` will not pick this up).
 - `complete` / `AiAgentRouter.complete` remain; prefer `execute` for mesh strategies.
 - Install `ffi` (declared dependency). Compile native core only if you want the Rust engine.
 - If you configured RubyGems trusted publishing against `push_gem.yml`, update the workflow filename to **`release.yml`**.
 
-## Upgrading from 2.1.0 â†’ 2.2.0
+## Upgrading from 2.1.0 Ã¢â€ â€™ 2.2.0
 
 - Bump to [2.2.0 on RubyGems](https://rubygems.org/gems/ruby_llm_mesh/versions/2.2.0).
 - Transient provider failures now retry with exponential backoff (`max_retries`, `retry_backoff`) before failover. Authentication failures still skip retries.
@@ -201,12 +201,12 @@ Designed with [Cursor](https://cursor.com) models Opus and Fable 5.
 
 ## Community & policies
 
-- [Code of Conduct](CODE_OF_CONDUCT.md) â€” Contributor Covenant 2.1; see also [CONTRIBUTING.md](CONTRIBUTING.md)
-- [Privacy Policy](PRIVACY.md) â€” no phone-home telemetry; prompts and API keys stay with endpoints you configure
+- [Code of Conduct](CODE_OF_CONDUCT.md) Ã¢â‚¬â€ Contributor Covenant 2.1; see also [CONTRIBUTING.md](CONTRIBUTING.md)
+- [Privacy Policy](PRIVACY.md) Ã¢â‚¬â€ no phone-home telemetry; prompts and API keys stay with endpoints you configure
 
 ## License
 
-**Source-available proprietary** — evaluation under [LICENSE](./LICENSE); commercial / production use via [COMMERCIAL.md](./COMMERCIAL.md). See [LICENSE_TRANSITION_NOTICE.md](./LICENSE_TRANSITION_NOTICE.md) and [NOTICE](./NOTICE).
+**Source-available proprietary** â€” evaluation under [LICENSE](./LICENSE); commercial / production use via [COMMERCIAL.md](./COMMERCIAL.md). See [LICENSE_TRANSITION_NOTICE.md](./LICENSE_TRANSITION_NOTICE.md) and [NOTICE](./NOTICE).
 
 
 ---
@@ -214,3 +214,7 @@ Designed with [Cursor](https://cursor.com) models Opus and Fable 5.
 ## License & acquisition
 
 This project is **proprietary**. Production use, redistribution, and commercial deployment require a written commercial license or completed acquisition. See [LICENSE](./LICENSE) and [ACQUISITION.md](./ACQUISITION.md). Contact [@theworker02](https://github.com/theworker02).
+
+## Acquisition diligence
+
+Buyer-facing diligence materials live in [docs/acquisition/](./docs/acquisition/). Commercial licensing contact path: [COMMERCIAL.md](./COMMERCIAL.md).
