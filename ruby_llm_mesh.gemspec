@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
     RubyGems listing at https://rubygems.org/gems/ruby_llm_mesh.
   DESC
   spec.homepage = "https://github.com/theworker02/ruby_llm_mesh"
-  spec.license = "MIT"
+  spec.license = "Proprietary"
   spec.required_ruby_version = ">= 3.1.0"
 
   spec.metadata["homepage_uri"] = spec.homepage
@@ -59,7 +59,7 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  # Optional native compile — documented via `rake compile`; gem works without it.
+  # Optional native compile â€” documented via `rake compile`; gem works without it.
   # spec.extensions = []  # cargo-based; use rake compile instead of mkmf
 
   spec.add_dependency "ffi", "~> 1.17"

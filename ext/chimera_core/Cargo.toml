@@ -2,9 +2,9 @@
 name = "chimera_core"
 version = "2.0.0"
 edition = "2021"
-description = "Sovereign mesh core for ruby_llm_mesh — native node + intent execution"
-license = "MIT"
-
+description = "Sovereign mesh core for ruby_llm_mesh â€” native node + intent execution"
+license = "LicenseRef-Proprietary"
+license-file = "LICENSE"
 [lib]
 name = "chimera_core"
 crate-type = ["cdylib"]
