@@ -218,3 +218,16 @@ This project is **proprietary**. Production use, redistribution, and commercial 
 ## Acquisition diligence
 
 Buyer-facing diligence materials live in [docs/acquisition/](./docs/acquisition/). Commercial licensing contact path: [COMMERCIAL.md](./COMMERCIAL.md).
+
+## Badges & release notes
+
+| Badge | Meaning |
+| --- | --- |
+| docs live | Public documentation / Pages surface for `ruby_llm_mesh` |
+| release v1.0.0 | Stable tagged release with narrative notes |
+| license | See repository `LICENSE` for terms |
+| status maintained | Actively kept in the @theworker02 portfolio |
+| version 1.0.0 | Documentation and brand completeness milestone |
+| pages enabled | Site intended at `https://theworker02.github.io/ruby_llm_mesh/` |
+
+Detailed narrative for the stable line lives in [CHANGELOG.md](./CHANGELOG.md) and the [v1.0.0 GitHub Release](https://github.com/theworker02/ruby_llm_mesh/releases/tag/v1.0.0).
