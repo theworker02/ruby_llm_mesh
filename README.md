@@ -1,4 +1,8 @@
 <p align="center">
+  <img src="docs/logo.svg" alt="ruby_llm_mesh official logo" width="128" height="128">
+</p>
+
+<p align="center">
   <img src="assets/logo.png" alt="ruby_llm_mesh logo" width="160" />
 </p>
 
